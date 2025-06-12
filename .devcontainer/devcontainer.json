@@ -5,24 +5,29 @@
 		"dockerfile": "../Dockerfile"
 	},
 	
-	// Add Git feature
 	"features": {
-		"ghcr.io/devcontainers/features/git:1": {}
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": false,
+			"installOhMyZsh": false,
+			"upgradePackages": false
+		}
 	},
 
 	"mounts": [
-		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.gitconfig,target=/home/astro/.gitconfig,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.ssh,target=/home/astro/.ssh,type=bind,consistency=cached"
 	],
-	"postCreateCommand": "chmod 600 /home/vscode/.ssh/id_rsa || true",
+	
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-python.vscode-pylance",
 				"ms-python.debugpy",
 				"ms-python.python"
-				
 			]
 		}
-	}
+	},
+	
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y openssh-client && if [ -d /home/astro/.ssh ]; then chmod 700 /home/astro/.ssh && find /home/astro/.ssh -type f -name 'id_*' ! -name '*.pub' -exec chmod 600 {} \\; && if [ -f /home/astro/.ssh/config ]; then chmod 600 /home/astro/.ssh/config; fi; fi"
 }
