@@ -99,3 +99,12 @@ airflow dags backfill --start-date START_DATE --end-date END_DATE dag_id
 ```
 
 ### XCOMs
+* XCOM = a box with the value you want to share
+* XCOM identified by:
+    - a key (can be unique)
+    - a run_id
+    - a task_id (task the creates the XCOM)
+    - a dag_id
+    - key || task_id = unique > use this to pull to task B.
+
+![alt text](image.png)
