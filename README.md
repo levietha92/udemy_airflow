@@ -43,3 +43,59 @@ Contact
 =======
 
 The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+
+## Study notes
+### Infra
+
+
+### States of DAG run
+
+1. Queue
+2. Running (when first task runs)
+3. Success / Failure
+
+State of DAG run = state of the last task in the DAG
+
+### Start date vs end date vs logical date
+
+If a DAG is triggered on 2025-06-06, then Logical Date = 2025-06-05 (D-1)
+
+
+### @dag parameters
+```python
+@dag(
+    # must be unique across the project
+    dag_id="check_dag", 
+    
+    # this is "optional" but if it's null it's only ok if the schedule is also null
+    # start_date = DAG's first interval, will determine the timestamp Scheduler attempts to backfill
+    # start_date vs end_date vs logical_date: something related to Airflow 2.x vs 3.x
+    # the 3.x default behavior is more intuitive (CREATE_CRON_DATA_INTERVALS=False)
+    start_date=datetime(2025,1,1), 
+
+    # determines how often the DAG runs
+    schedule="0 0 * * *",
+
+    # catchup allows you to run non-triggered DAG, False by default
+    catchup=False,
+
+    # backfill allows running the DAG  on certain date range
+    backfill
+
+    # description
+    description="DAG to check data"
+)
+```
+### schedule
+![alt text](img/schedule_airflow3.png)
+![alt text](img/schedule_airflow2.png)
+
+### catchup
+![alt text](img/catchup_airflow3.png)
+
+### backfill
+```python
+airflow dags backfill --start-date START_DATE --end-date END_DATE dag_id
+```
+
+### XCOMs
